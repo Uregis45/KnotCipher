@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>KnotCipher</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="signal-bg" id="signalBg"></div>
+    
+    <div class="container">
+        <div class="header">
+            <div class="knot-icon">🪢</div>
+            <div class="logo">KnotCipher</div>
+            <div class="tagline">Tie your secrets in knots. Only the right key unties them.</div>
+        </div>
+
+        <div class="main-content">
+            <!-- Encrypt Section -->
+            <div class="card">
+                <div class="card-title">
+                    <span>🔒</span> Encrypt Message
+                </div>
+                
+                <div class="form-group">
+                    <label>Your Secret Message</label>
+                    <textarea id="encryptMessage" placeholder="Type your secret message here..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Knot Key (Password)</label>
+                    <input type="password" id="encryptKey" placeholder="Enter your knot key...">
+                    <div class="strength-meter">
+                        <div class="strength-bar" id="strengthBar"></div>
+                    </div>
+                </div>
+                
+                <button class="btn" id="encryptBtn">🔐 Encrypt & Tie Knot</button>
+                
+                <div class="result-box" id="encryptResult" style="display: none;">
+                    <div class="result-label">
+                        <span>📦 Encrypted Message</span>
+                        <button class="copy-btn" id="copyEncryptBtn">Copy</button>
+                    </div>
+                    <div id="encryptedOutput"></div>
+                </div>
+            </div>
+
+            <!-- Decrypt Section -->
+            <div class="card">
+                <div class="card-title">
+                    <span>🔓</span> Decrypt Message
+                </div>
+                
+                <div class="form-group">
+                    <label>Encrypted Message</label>
+                    <textarea id="decryptMessage" placeholder="Paste the encrypted message here..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Knot Key (Password)</label>
+                    <input type="password" id="decryptKey" placeholder="Enter the knot key...">
+                </div>
+                
+                <button class="btn" id="decryptBtn">🔓 Untie Knot & Decrypt</button>
+                
+                <div class="result-box" id="decryptResult" style="display: none;">
+                    <div class="result-label">
+                        <span>📄 Decrypted Message</span>
+                        <button class="copy-btn" id="copyDecryptBtn">Copy</button>
+                    </div>
+                    <div id="decryptedOutput"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>KnotCipher — Secure Message Encryption | Made with 🔐 for privacy</p>
+            <p style="margin-top: 10px; font-size: 0.75rem;">Messages encrypted with AES-256-GCM • Keys derived with PBKDF2</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    
+</body>
+</html>

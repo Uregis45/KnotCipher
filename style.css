@@ -358,3 +358,74 @@
             transition: all 0.3s ease;
             border-radius: 2px;
         }
+        /* Voice Section Styles */
+.voice-controls {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(79, 172, 254, 0.5);
+}
+
+.voice-action-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.voice-action-buttons .btn {
+    flex: 1;
+}
+
+.download-btn {
+    background: rgba(79, 172, 254, 0.2);
+    border: 1px solid #4facfe;
+    color: #4facfe;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+}
+
+.download-btn:hover {
+    background: #4facfe;
+    color: #0a0a0a;
+}
+
+/* Recording animation */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.recording-active {
+    animation: pulse 1s infinite;
+    background: #ff4444 !important;
+    border-color: #ff4444 !important;
+}
+
+/* Responsive for mobile */
+@media (max-width: 768px) {
+    .voice-controls {
+        flex-direction: column;
+    }
+    
+    .voice-controls .btn {
+        width: 100%;
+    }
+    
+    .voice-action-buttons {
+        flex-direction: column;
+    }
+}

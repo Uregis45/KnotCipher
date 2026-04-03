@@ -47,7 +47,6 @@
                     <div id="encryptedOutput"></div>
                 </div>
             </div>
-
             <!-- Decrypt Section -->
             <div class="card">
                 <div class="card-title">
@@ -75,12 +74,74 @@
                 </div>
             </div>
         </div>
+                    <!-- Voice Note Section - No Export Needed -->
+            <div class="card">
+                <div class="card-title">
+                    <span>🎙️</span> Voice Notes (Speak & Encrypt)
+                </div>
+                
+                <!-- Recording Area -->
+                <div class="form-group">
+                    <label>🎤 Record Voice Message</label>
+                    <div class="voice-controls">
+                        <button class="btn" id="recordBtn">Start Recording</button>
+                        <button class="btn btn-secondary" id="stopRecordBtn" disabled>Stop Recording</button>
+                    </div>
+                    <div id="recordingStatus" style="font-size: 0.8rem; color: #ff6666; margin-top: 5px;"></div>
+                </div>
+                
+                <!-- Voice Key -->
+                <div class="form-group">
+                    <label>Knot Key for Voice</label>
+                    <input type="password" id="voiceEncryptKey" placeholder="Enter key to encrypt this voice note...">
+                </div>
+                
+                <!-- Encrypt Button -->
+                <button class="btn" id="encryptVoiceBtn">🔐 Encrypt Voice Note</button>
+                
+                <!-- Encrypted Output (ready to share) -->
+                <div class="result-box" id="voiceEncryptResult" style="display: none;">
+                    <div class="result-label">
+                        <span>📦 Encrypted Voice (Share this)</span>
+                        <button class="copy-btn" id="copyVoiceResultBtn">Copy</button>
+                    </div>
+                    <div id="encryptedVoiceResult" style="word-break: break-all; font-family: monospace; font-size: 0.8rem;"></div>
+                </div>
+                
+                <hr style="margin: 20px 0; border-color: rgba(255,255,255,0.1);">
+                
+                <!-- Decryption Section -->
+                <div class="card-title" style="margin-top: 10px;">
+                    <span>🔓</span> Decrypt Received Voice
+                </div>
+                
+                <div class="form-group">
+                    <label>Paste Encrypted Voice</label>
+                    <textarea id="voiceDecryptInput" rows="3" placeholder="Paste encrypted voice text here..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Knot Key</label>
+                    <input type="password" id="voiceDecryptKey" placeholder="Enter the key to decrypt">
+                </div>
+                
+                <button class="btn" id="decryptVoiceBtn">🔓 Decrypt & Play</button>
+                
+                <!-- Decrypted Audio Player -->
+                <div class="result-box" id="voiceDecryptResult" style="display: none;">
+                    <div class="result-label">
+                        <span>🎧 Decrypted Voice</span>
+                    </div>
+                    <audio id="decryptedAudioPlayer" controls style="width: 100%;"></audio>
+                </div>
+            </div>
 
         <div class="footer">
             <p>KnotCipher — Secure Message Encryption | Made with 🔐 for privacy</p>
             <p style="margin-top: 10px; font-size: 0.75rem;">Messages encrypted with AES-256-GCM • Keys derived with PBKDF2</p>
         </div>
     </div>
+    
 
     <script src="script.js"></script>
     

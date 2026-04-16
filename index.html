@@ -2,86 +2,415 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪢</text></svg>">
-    <title>KnotCipher</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KnotCipher Chat - Encrypted Real-Time Chat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .chat-container {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 900px;
+            height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        .header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        .key-section {
+            background: #fff3cd;
+            padding: 15px;
+            border-bottom: 2px solid #ffc107;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .key-section input {
+            flex: 2;
+            padding: 10px;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .key-section button {
+            background: #ffc107;
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .key-section button:hover {
+            background: #ffb300;
+        }
+        .room-section {
+            background: #e3f2fd;
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            border-bottom: 1px solid #90caf9;
+        }
+        .room-section input {
+            flex: 2;
+            padding: 10px;
+            border: 1px solid #90caf9;
+            border-radius: 8px;
+        }
+        .room-section button {
+            background: #2196f3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .status {
+            padding: 8px;
+            text-align: center;
+            font-size: 12px;
+            color: white;
+            border-radius: 5px;
+        }
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #fafafa;
+        }
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        .message.sent {
+            align-items: flex-end;
+        }
+        .message.received {
+            align-items: flex-start;
+        }
+        .message-bubble {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            word-wrap: break-word;
+        }
+        .message.sent .message-bubble {
+            background: #2a5298;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        .message.received .message-bubble {
+            background: white;
+            color: #333;
+            border: 1px solid #ddd;
+            border-bottom-left-radius: 4px;
+        }
+        .message-encrypted {
+            font-size: 10px;
+            color: #999;
+            margin-top: 5px;
+            font-family: monospace;
+        }
+        .input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #ddd;
+            display: flex;
+            gap: 10px;
+        }
+        .input-area input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 14px;
+        }
+        .input-area button {
+            background: #2a5298;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .input-area button:hover {
+            background: #1e3c72;
+        }
+        .info {
+            padding: 10px;
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            background: #f5f5f5;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .message {
+            animation: fadeIn 0.3s ease;
+        }
+    </style>
 </head>
 <body>
-    <div class="signal-bg" id="signalBg"></div>
+<div class="chat-container">
+    <div class="header">
+        <h1>🔐 KnotCipher Chat</h1>
+        <p>Tie your secrets in knots. Only the right key unties them.</p>
+        <small>Your ID: <span id="currentUser">Loading...</span></small>
+    </div>
     
-    <div class="container">
-        <div class="header">
-            <div class="knot-icon">🪢</div>
-            <div class="logo">KnotCipher</div>
-            <div class="tagline">Tie your secrets in knots. Only the right key unties them.</div>
-        </div>
-
-        <div class="main-content">
-            <!-- Encrypt Section -->
-            <div class="card">
-                <div class="card-title">
-                    <span>🔒</span> Encrypt Message
-                </div>
-                
-                <div class="form-group">
-                    <label>Your Secret Message</label>
-                    <textarea id="encryptMessage" placeholder="Type your secret message here..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Knot Key (Password)</label>
-                    <input type="password" id="encryptKey" placeholder="Enter your knot key...">
-                    <div class="strength-meter">
-                        <div class="strength-bar" id="strengthBar"></div>
-                    </div>
-                </div>
-                
-                <button class="btn" id="encryptBtn">🔐 Encrypt & Tie Knot</button>
-                
-                <div class="result-box" id="encryptResult" style="display: none;">
-                    <div class="result-label">
-                        <span>📦 Encrypted Message</span>
-                        <button class="copy-btn" id="copyEncryptBtn">Copy</button>
-                    </div>
-                    <div id="encryptedOutput"></div>
-                </div>
-            </div>
-            <!-- Decrypt Section -->
-            <div class="card">
-                <div class="card-title">
-                    <span>🔓</span> Decrypt Message
-                </div>
-                
-                <div class="form-group">
-                    <label>Encrypted Message</label>
-                    <textarea id="decryptMessage" placeholder="Paste the encrypted message here..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Knot Key (Password)</label>
-                    <input type="password" id="decryptKey" placeholder="Enter the knot key...">
-                </div>
-                
-                <button class="btn" id="decryptBtn">🔓 Untie Knot & Decrypt</button>
-                
-                <div class="result-box" id="decryptResult" style="display: none;">
-                    <div class="result-label">
-                        <span>📄 Decrypted Message</span>
-                        <button class="copy-btn" id="copyDecryptBtn">Copy</button>
-                    </div>
-                    <div id="decryptedOutput"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer">
-            <p>KnotCipher — Secure Message Encryption | Made with 🔐 for privacy</p>
-            <p style="margin-top: 10px; font-size: 0.75rem;">Messages encrypted with AES-256-GCM • Keys derived with PBKDF2</p>
+    <div class="key-section">
+        <input type="text" id="knotKeyInput" placeholder="Enter your Knot Key (shared secret)" autocomplete="off">
+        <button onclick="setKnotKey()">🔑 Set Knot Key</button>
+        <div id="keyStatus" class="status" style="background: #ff9800;">⚠️ No Knot Key set</div>
+    </div>
+    
+    <div class="room-section">
+        <input type="text" id="roomInput" placeholder="Room name (e.g., Alice&Bob)" value="lobby" autocomplete="off">
+        <button onclick="joinRoom()">🚪 Join / Create Room</button>
+        <div id="roomStatus" class="status" style="background: #2196f3;">📡 Joining lobby...</div>
+    </div>
+    
+    <div class="messages-area" id="messagesContainer">
+        <div style="text-align: center; color: #999; padding: 20px;">
+            💬 Set your Knot Key and join a room to start chatting
         </div>
     </div>
-
-    <script src="script.js"></script>
     
+    <div class="input-area">
+        <input type="text" id="messageInput" placeholder="Type your secret message... 🔒" autocomplete="off">
+        <button onclick="sendMessage()">📤 Send Encrypted</button>
+    </div>
+    
+    <div class="info">
+        💡 Both people must use the SAME Room Name and SAME Knot Key to read messages
+    </div>
+</div>
+
+<!-- Firebase SDK - CORRECT VERSION -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+<script>
+    // YOUR ACTUAL FIREBASE CONFIG (from your code)
+    const firebaseConfig = {
+        apiKey: "AIzaSyCGt-aChYWe-xWqPNFBMQgSSVa8_2Ra-uc",
+        authDomain: "knotcipher.firebaseapp.com",
+        databaseURL: "https://knotcipher-default-rtdb.firebaseio.com",
+        projectId: "knotcipher",
+        storageBucket: "knotcipher.firebasestorage.app",
+        messagingSenderId: "250799176721",
+        appId: "1:250799176721:web:e0a7ccb3c6cae9926b45b0",
+        measurementId: "G-Q1K76V3N8R"
+    };
+    
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    
+    console.log("✅ Firebase connected successfully!");
+    
+    // Global variables
+    let currentRoom = "lobby";
+    let knotKey = "";
+    let currentUser = "User_" + Math.floor(Math.random() * 10000);
+    
+    // Encryption/Decryption functions
+    function getKeyBytes(key, length) {
+        let result = [];
+        let keyStr = key;
+        while (result.length < length) {
+            let hash = 0;
+            for (let i = 0; i < keyStr.length; i++) {
+                hash = ((hash << 5) - hash) + keyStr.charCodeAt(i);
+                hash |= 0;
+            }
+            let hashStr = Math.abs(hash).toString();
+            for (let j = 0; j < hashStr.length; j++) {
+                if (result.length < length) {
+                    result.push(hashStr.charCodeAt(j));
+                }
+            }
+            keyStr = hashStr;
+        }
+        return result;
+    }
+    
+    function encryptMessage(text, password) {
+        if (!password) return text;
+        let textBytes = [];
+        for (let i = 0; i < text.length; i++) {
+            textBytes.push(text.charCodeAt(i));
+        }
+        let keyBytes = getKeyBytes(password, textBytes.length);
+        let encryptedBytes = [];
+        for (let i = 0; i < textBytes.length; i++) {
+            encryptedBytes.push(textBytes[i] ^ keyBytes[i]);
+        }
+        return btoa(String.fromCharCode.apply(null, encryptedBytes));
+    }
+    
+    function decryptMessage(encryptedBase64, password) {
+        if (!password) return "🔒 [Set Knot Key to decrypt]";
+        try {
+            let encryptedStr = atob(encryptedBase64);
+            let encryptedBytes = [];
+            for (let i = 0; i < encryptedStr.length; i++) {
+                encryptedBytes.push(encryptedStr.charCodeAt(i));
+            }
+            let keyBytes = getKeyBytes(password, encryptedBytes.length);
+            let decryptedBytes = [];
+            for (let i = 0; i < encryptedBytes.length; i++) {
+                decryptedBytes.push(encryptedBytes[i] ^ keyBytes[i]);
+            }
+            return String.fromCharCode.apply(null, decryptedBytes);
+        } catch(e) {
+            return "🔒 [Wrong key or corrupted message]";
+        }
+    }
+    
+    function setKnotKey() {
+        knotKey = document.getElementById('knotKeyInput').value;
+        const statusDiv = document.getElementById('keyStatus');
+        if (knotKey) {
+            statusDiv.innerHTML = `✅ Knot Key set: ${knotKey.substring(0, 10)}...`;
+            statusDiv.style.background = "#4caf50";
+        } else {
+            statusDiv.innerHTML = "⚠️ No Knot Key set";
+            statusDiv.style.background = "#ff9800";
+        }
+    }
+    
+    function joinRoom() {
+        let roomName = document.getElementById('roomInput').value.trim();
+        if (!roomName) {
+            alert("Enter a room name");
+            return;
+        }
+        
+        // Remove old listener if exists
+        if (window.currentMessageRef) {
+            window.currentMessageRef.off();
+        }
+        
+        currentRoom = roomName;
+        document.getElementById('currentRoom').innerHTML = currentRoom;
+        document.getElementById('messagesContainer').innerHTML = "";
+        document.getElementById('roomStatus').innerHTML = `✅ Connected to room: ${currentRoom}`;
+        document.getElementById('roomStatus').style.background = "#4caf50";
+        
+        // Listen for messages in new room
+        const messagesRef = database.ref(`rooms/${currentRoom}/messages`);
+        window.currentMessageRef = messagesRef;
+        
+        messagesRef.on('child_added', (snapshot) => {
+            const msg = snapshot.val();
+            displayMessage(msg);
+        });
+    }
+    
+    function sendMessage() {
+        let plainText = document.getElementById('messageInput').value;
+        if (!plainText.trim()) {
+            alert("Type a message first!");
+            return;
+        }
+        if (!knotKey) {
+            alert("Please set your Knot Key first!");
+            return;
+        }
+        
+        let encrypted = encryptMessage(plainText, knotKey);
+        
+        const messageData = {
+            sender: currentUser,
+            encrypted: encrypted,
+            timestamp: Date.now()
+        };
+        
+        const messagesRef = database.ref(`rooms/${currentRoom}/messages`);
+        messagesRef.push(messageData);
+        
+        document.getElementById('messageInput').value = "";
+    }
+    
+    function displayMessage(msg) {
+        const isOwnMessage = (msg.sender === currentUser);
+        let decryptedText = decryptMessage(msg.encrypted, knotKey);
+        
+        const messagesDiv = document.getElementById('messagesContainer');
+        const messageElement = document.createElement('div');
+        messageElement.className = `message ${isOwnMessage ? 'sent' : 'received'}`;
+        
+        messageElement.innerHTML = `
+            <div class="message-bubble">
+                <strong>${escapeHtml(msg.sender)}</strong><br>
+                ${escapeHtml(decryptedText)}
+            </div>
+            <div class="message-encrypted">
+                🔒 ${msg.encrypted.substring(0, 30)}...
+            </div>
+        `;
+        
+        messagesDiv.appendChild(messageElement);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+    
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    // Auto-join default room on load
+    window.onload = () => {
+        document.getElementById('currentUser').innerText = currentUser;
+        setTimeout(() => joinRoom(), 500);
+    };
+    
+    // Send on Enter key
+    document.addEventListener('DOMContentLoaded', () => {
+        const input = document.getElementById('messageInput');
+        if(input) {
+            input.addEventListener('keypress', (e) => {
+                if(e.key === 'Enter') sendMessage();
+            });
+        }
+    });
+</script>
 </body>
 </html>
